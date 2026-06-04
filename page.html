@@ -61,16 +61,11 @@
       return (p >= 1 && p <= TOTAL) ? p : 1;
     }
 
-    var heData = {}, ruData = {};
+    var ruData = {};
 
     async function loadTranslations() {
       try {
-        var results = await Promise.all([
-          fetch('translations/he.json').then(function(r) { return r.json(); }),
-          fetch('translations/ru.json').then(function(r) { return r.json(); })
-        ]);
-        heData = results[0];
-        ruData = results[1];
+        ruData = await fetch('translations/ru.json').then(function(r) { return r.json(); });
       } catch (e) {
         console.warn('Could not load translations:', e);
       }
@@ -99,17 +94,18 @@
       document.getElementById('page-num-he').textContent = n;
 
       // Russian translation
+      // ru.json values: null = intentionally blank page, "" = not yet translated, "text" = translation
       var ruEl = document.getElementById('ru-text');
-      var ru = (ruData[String(n)] || '').trim();
-      var heEmpty = !(heData[String(n)] || '').trim();
-      if (ru) {
-        ruEl.innerHTML = ru
+      var ruVal = ruData[String(n)];
+      if (ruVal) {
+        ruEl.innerHTML = ruVal
+          .trim()
           .split(/\n{2,}/)
           .map(function(para) {
             return '<p>' + para.replace(/\n/g, '<br>') + '</p>';
           })
           .join('');
-      } else if (heEmpty) {
+      } else if (ruVal == null) {
         ruEl.innerHTML = '';
       } else {
         ruEl.innerHTML = '<p class="no-translation">Перевод для этой страницы ещё не добавлен.</p>';
