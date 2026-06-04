@@ -1,0 +1,6 @@
+# Original PDF is large (34 MB) — keep locally, not tracked in git.
+# Delete this line if you want to commit it (file is under GitHub's 100 MB limit).
+original/
+
+# macOS
+.DS_Store

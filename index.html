@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Тольдот р. Саадьи — תולדות ר׳ סעדיה</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="index-page">
+
+  <header class="site-header">
+    <div class="header-inner">
+      <h1 class="title-he" dir="rtl" lang="he">תולדות ר׳ סעדיה</h1>
+      <h2 class="title-ru">Жизнеописание рабби Саадьи Либерова</h2>
+      <p class="subtitle-he" dir="rtl" lang="he">ציוני-דרך בחיי המשפיע, החסיד והשליח ר׳ סעדיה ליבעראוו ע״ה</p>
+      <p class="subtitle-ru">Вехи жизни машпиа, хасида и шлиаха р. Саадьи Либерова</p>
+      <p class="subtitle-ru" style="margin-top:0.6rem;opacity:0.6;">
+        Составил внук его Мордехай-Цви Либеров · ד׳ באדר-ראשון ה׳תשס״ח
+      </p>
+    </div>
+  </header>
+
+  <main>
+    <section class="toc-section">
+      <h2 class="section-title">Оглавление</h2>
+      <div id="chapter-list" class="chapter-list">
+        <p class="empty-toc">Загрузка…</p>
+      </div>
+    </section>
+
+    <section class="pages-section">
+      <h2 class="section-title">Все страницы</h2>
+      <div class="pages-grid" id="pages-grid"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© 2008 HaMerkaz Shelanu Inc · Elsternwick, Victoria, Australia</p>
+    <p>Статический сайт: изображения страниц + русский перевод рядом</p>
+  </footer>
+
+  <script>
+    const TOTAL = 117;
+
+    function imgPath(n) {
+      return 'img/page-' + String(n).padStart(3, '0') + '.jpg';
+    }
+
+    async function loadToc() {
+      const el = document.getElementById('chapter-list');
+      try {
+        const r = await fetch('toc.json');
+        if (!r.ok) throw new Error('no toc');
+        const toc = await r.json();
+        const chapters = toc.chapters || [];
+        if (!chapters.length) {
+          el.innerHTML = '<p class="empty-toc">Главы будут добавлены позже. Воспользуйтесь сеткой страниц ниже.</p>';
+          return;
+        }
+        el.innerHTML = chapters.map(function(ch) {
+          return '<a class="chapter-item" href="page.html?p=' + ch.page + '">'
+            + '<span class="chapter-page">Стр. ' + ch.page + '</span>'
+            + '<span class="chapter-title">' + (ch.title_ru || '') + '</span>'
+            + (ch.title_he
+              ? '<span class="chapter-title-he" dir="rtl" lang="he">' + ch.title_he + '</span>'
+              : '<span></span>')
+            + '</a>';
+        }).join('');
+      } catch (_) {
+        el.innerHTML = '<p class="empty-toc">Главы будут добавлены позже. Воспользуйтесь сеткой страниц ниже.</p>';
+      }
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById('pages-grid');
+      const frag = document.createDocumentFragment();
+      for (let n = 1; n <= TOTAL; n++) {
+        const a = document.createElement('a');
+        a.href = 'page.html?p=' + n;
+        a.className = 'page-thumb';
+        a.title = 'Страница ' + n;
+        const img = document.createElement('img');
+        img.src = imgPath(n);
+        img.alt = 'Стр. ' + n;
+        img.loading = 'lazy';
+        const span = document.createElement('span');
+        span.className = 'thumb-num';
+        span.textContent = n;
+        a.appendChild(img);
+        a.appendChild(span);
+        frag.appendChild(a);
+      }
+      grid.appendChild(frag);
+    }
+
+    loadToc();
+    renderGrid();
+  </script>
+</body>
+</html>
