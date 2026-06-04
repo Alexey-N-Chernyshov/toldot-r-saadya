@@ -101,6 +101,7 @@
       // Russian translation
       var ruEl = document.getElementById('ru-text');
       var ru = (ruData[String(n)] || '').trim();
+      var heEmpty = !(heData[String(n)] || '').trim();
       if (ru) {
         ruEl.innerHTML = ru
           .split(/\n{2,}/)
@@ -108,6 +109,8 @@
             return '<p>' + para.replace(/\n/g, '<br>') + '</p>';
           })
           .join('');
+      } else if (heEmpty) {
+        ruEl.innerHTML = '';
       } else {
         ruEl.innerHTML = '<p class="no-translation">Перевод для этой страницы ещё не добавлен.</p>';
       }
