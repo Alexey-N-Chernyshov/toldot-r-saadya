@@ -37,6 +37,11 @@ a { color: var(--accent); }
   text-align: center;
 }
 
+.site-header a {
+  color: #fff;
+  text-decoration: underline;
+}
+
 .header-inner { max-width: 700px; margin: 0 auto; }
 
 .title-he {
