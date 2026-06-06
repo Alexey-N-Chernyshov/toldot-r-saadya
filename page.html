@@ -70,25 +70,16 @@
 
       async function loadTranslation(n) {
         var ruEl = document.getElementById("ru-text");
+        var html =
+          '<p class="no-translation">Перевод для этой страницы ещё не добавлен.</p>';
         try {
           var resp = await fetch("translations/ru/" + n + ".html");
-          if (!resp.ok) {
-            ruEl.innerHTML =
-              '<p class="no-translation">Перевод для этой страницы ещё не добавлен.</p>';
-            return;
+          if (resp.ok) {
+            var trimmed = (await resp.text()).trim();
+            if (trimmed !== "<!-- TODO -->") html = trimmed;
           }
-          var text = await resp.text();
-          var trimmed = text.trim();
-          if (!trimmed || trimmed === "<!-- TODO -->") {
-            ruEl.innerHTML =
-              '<p class="no-translation">Перевод для этой страницы ещё не добавлен.</p>';
-            return;
-          }
-          ruEl.innerHTML = trimmed;
-        } catch (e) {
-          ruEl.innerHTML =
-            '<p class="no-translation">Перевод для этой страницы ещё не добавлен.</p>';
-        }
+        } catch (e) {}
+        ruEl.innerHTML = html;
       }
 
       function setNavBtn(id, enabled, href) {
