@@ -61,13 +61,23 @@
       return (p >= 1 && p <= TOTAL) ? p : 1;
     }
 
-    var ruData = {};
-
-    async function loadTranslations() {
+    async function loadTranslation(n) {
+      var ruEl = document.getElementById('ru-text');
       try {
-        ruData = await fetch('translations/ru.json').then(function(r) { return r.json(); });
+        var resp = await fetch('translations/ru/' + n + '.html');
+        if (!resp.ok) {
+          ruEl.innerHTML = '<p class="no-translation">Перевод для этой страницы ещё не добавлен.</p>';
+          return;
+        }
+        var text = await resp.text();
+        var trimmed = text.trim();
+        if (!trimmed || trimmed === '<!-- TODO -->') {
+          ruEl.innerHTML = '<p class="no-translation">Перевод для этой страницы ещё не добавлен.</p>';
+          return;
+        }
+        ruEl.innerHTML = trimmed;
       } catch (e) {
-        console.warn('Could not load translations:', e);
+        ruEl.innerHTML = '<p class="no-translation">Перевод для этой страницы ещё не добавлен.</p>';
       }
     }
 
@@ -92,18 +102,6 @@
 
       // Hebrew page number label
       document.getElementById('page-num-he').textContent = n;
-
-      // Russian translation
-      // ru.json values: null = intentionally blank page, "" = not yet translated, "text" = translation
-      var ruEl = document.getElementById('ru-text');
-      var ruVal = ruData[String(n)];
-      if (ruVal) {
-        ruEl.innerHTML = ruVal;
-      } else if (ruVal == null) {
-        ruEl.innerHTML = '';
-      } else {
-        ruEl.innerHTML = '<p class="no-translation">Перевод для этой страницы ещё не добавлен.</p>';
-      }
 
       // Page indicators
       var label = 'Страница ' + n + ' из ' + TOTAL;
@@ -142,9 +140,11 @@
     });
 
     // Boot
-    loadTranslations().then(function() {
-      render(getPageParam());
-    });
+    (async function() {
+      var n = getPageParam();
+      render(n);
+      await loadTranslation(n);
+    })();
   </script>
 </body>
 </html>
