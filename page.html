@@ -98,13 +98,7 @@
       var ruEl = document.getElementById('ru-text');
       var ruVal = ruData[String(n)];
       if (ruVal) {
-        ruEl.innerHTML = ruVal
-          .trim()
-          .split(/\n{2,}/)
-          .map(function(para) {
-            return '<p>' + para.replace(/\n/g, '<br>') + '</p>';
-          })
-          .join('');
+        ruEl.innerHTML = ruVal;
       } else if (ruVal == null) {
         ruEl.innerHTML = '';
       } else {
