@@ -8,6 +8,9 @@
 
 ```html
 <div style="text-align: justify">
+  <p style="text-align: center">Глава 1</p>
+  <h1 style="text-align: center">Название главы</h1>
+
   <h2 style="text-align: left">Заголовок раздела</h2>
 
   <p>Основной текст.</p>
