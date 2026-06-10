@@ -39,9 +39,6 @@
 
       <!-- RIGHT: Hebrew original image -->
       <section class="he-col">
-        <div class="col-label" dir="rtl" lang="he">
-          מקור בעברית · עמוד <span id="page-num-he">…</span>
-        </div>
         <img class="page-img" id="page-img" src="" alt="" loading="eager" />
       </section>
     </main>
@@ -100,9 +97,6 @@
         var img = document.getElementById("page-img");
         img.src = imgPath(n);
         img.alt = "Страница " + n;
-
-        // Hebrew page number label
-        document.getElementById("page-num-he").textContent = n;
 
         // Page indicators
         var label = "Страница " + n + " из " + TOTAL;
